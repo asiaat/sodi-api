@@ -16,30 +16,35 @@ def index():
         'Description': 'Graffity and Streetart database API'
     }
 
-@app.route('/location')
-def get_location():
+@app.route('/location/{place}')
+def get_by_location(place):
     try:
-        response = table.scan(FilterExpression=Attr('location').eq('Santiago'))
+        response = table.scan(FilterExpression=Attr('location').eq(place))
         items = response['Items']
 
         return items
     except:
         return "Error"
 
-@app.route('/item')
-def get_item():
-    response = table.get_item(
-       Key={
-            'sodiuid': '2019-03-11T13:51:26,65677',
-            'screen_name': 'Gio_L9'
-        }
-    )
+@app.route('/user/{screen_name}')
+def get_by_user(screen_name):
+    try:
+        response = table.scan(FilterExpression=Attr('screen_name').eq(screen_name))
+        items = response['Items']
 
-    item = response['Item']
-    geo = item['geolocation']
-    loc = item['location']
+        return items
+    except:
+        return "Error"
 
-    return geo
+@app.route('/lang/{lang}')
+def get_by_lang(lang):
+    try:
+        response = table.scan(FilterExpression=Attr('lang').eq(lang.strip()))
+        items = response['Items']
+
+        return items
+    except:
+        return "Error"
 
 
 
