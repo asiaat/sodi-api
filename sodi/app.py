@@ -2,6 +2,7 @@
 from chalice import Chalice
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+import json
 
 app = Chalice(app_name='sodi')
 
@@ -22,7 +23,7 @@ def get_by_location(place):
         response = table.scan(FilterExpression=Attr('location').eq(place))
         items = response['Items']
 
-        return items
+        return json.dumps(items, indent=4, sort_keys=True)
     except:
         return "Error"
 
@@ -32,7 +33,7 @@ def get_by_user(screen_name):
         response = table.scan(FilterExpression=Attr('screen_name').eq(screen_name))
         items = response['Items']
 
-        return items
+        return json.dumps(items, indent=4, sort_keys=True)
     except:
         return "Error"
 
@@ -42,7 +43,17 @@ def get_by_lang(lang):
         response = table.scan(FilterExpression=Attr('lang').eq(lang.strip()))
         items = response['Items']
 
-        return items
+        return json.dumps(items, indent=4, sort_keys=True)
+    except:
+        return "Error"
+
+@app.route('/country/{country}')
+def get_by_country(country):
+    try:
+        response = table.scan(FilterExpression=Attr('country').eq(country))
+        items = response['Items']
+
+        return json.dumps(items, indent=4, sort_keys=True)
     except:
         return "Error"
 
